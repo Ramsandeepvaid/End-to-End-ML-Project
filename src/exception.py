@@ -1,4 +1,6 @@
 import sys
+from src.logger import logging
+
 def error_message_detail(error,error_detail:sys):
     ##ye line btayegi kis file mein error aaya hai aur kis line number par exc.info hume dega ye sb aur exc_tb variable me store hogi ye info
     _, _, exc_tb = error_detail.exc_info()
