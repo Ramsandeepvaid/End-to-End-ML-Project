@@ -4,9 +4,9 @@ from dataclasses import dataclass
 
 from catboost import CatBoostRegressor
 from sklearn.ensemble import (
-    RandomForestRegressor,
-    GradientBoostingRegressor,
     AdaBoostRegressor,
+    GradientBoostingRegressor,
+    RandomForestRegressor,
 )
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
@@ -17,19 +17,19 @@ from xgboost import XGBRegressor
 from src.exception import CustomException
 from src.logger import logging
 
-from src.utils import save_object, evaluate_model  # Import evaluate_model
+from src.utils import save_object, evaluate_model
 
 @dataclass
 class ModelTrainerConfig:
-    trained_model_file_path = os.path.join('artifacts', "model.pkl")
+    trained_model_file_path = os.path.join("artifacts", "model.pkl")
 
 class ModelTrainer:
     def __init__(self):
         self.model_trainer_config = ModelTrainerConfig()
 
-    def initiate_model_trainer(self, train_array, test_array, preprocessor_path):
+    def initiate_model_trainer(self, train_array, test_array):
         try:
-            logging.info("split training and test input data")
+            logging.info("Split training and test input data")
             X_train, Y_train, X_test, Y_test = (
                 train_array[:, :-1],
                 train_array[:, -1],
@@ -37,33 +37,39 @@ class ModelTrainer:
                 test_array[:, -1]
             )
             models = {
-                "LinearRegression": LinearRegression(),
-                "DecisionTreeRegressor": DecisionTreeRegressor(),
-                "RandomForestRegressor": RandomForestRegressor(),
-                "GradientBoostingRegressor": GradientBoostingRegressor(),
-                "KNeighborsRegressor": KNeighborsRegressor(),
+                "Random Forest": RandomForestRegressor(),
+                "Decision Tree": DecisionTreeRegressor(),
+                "Gradient Boosting": GradientBoostingRegressor(),
+                "Linear Regression": LinearRegression(),
                 "XGBRegressor": XGBRegressor(),
-                "CatBoostRegressor": CatBoostRegressor(verbose=0),
-                "AdaBoostRegressor": AdaBoostRegressor()
+                "CatBoosting Regressor": CatBoostRegressor(verbose=False),
+                "AdaBoost Regressor": AdaBoostRegressor(),
             }
-            model_report: dict = evaluate_model(X_train=X_train, Y_train=Y_train, X_test=X_test, Y_test=Y_test, models=models)
+            # Remove param=params unless your evaluate_model supports it
+            model_report: dict = evaluate_model(
+                X_train=X_train, Y_train=Y_train, X_test=X_test, Y_test=Y_test, models=models
+            )
 
-            # Get the best model score and name
+            # To get best model score from dict
             best_model_score = max(model_report.values())
-            best_model_name = [name for name, score in model_report.items() if score == best_model_score][0]
+
+            # To get best model name from dict
+            best_model_name = list(model_report.keys())[
+                list(model_report.values()).index(best_model_score)
+            ]
             best_model = models[best_model_name]
 
             if best_model_score < 0.6:
-                raise CustomException("No best model found", sys)
-            logging.info("Best found model on both training and testing dataset")
+                raise CustomException("No best model found")
+            logging.info(f"Best found model on both training and testing dataset")
 
-            # Save your best model
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,
                 obj=best_model
             )
 
             predicted = best_model.predict(X_test)
+
             r2_square = r2_score(Y_test, predicted)
             return r2_square
 
