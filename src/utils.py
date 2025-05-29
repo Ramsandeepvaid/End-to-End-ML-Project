@@ -18,7 +18,7 @@ def save_object(file_path, obj):
     except Exception as e:
         raise CustomException(e, sys)
 
-def evaluate_model(X_train, Y_train, X_test, Y_test, models):
+def evaluate_model(X_train, Y_train, X_test, Y_test, models,param):
     try:
         report = {}
         for i in range(len(list(models))):
@@ -32,5 +32,5 @@ def evaluate_model(X_train, Y_train, X_test, Y_test, models):
         return report
 
     except Exception as e:
-        
+
         raise CustomException(e, sys)
