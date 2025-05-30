@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Exam Performance Indicator</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 500px;
+            margin: 80px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            padding: 40px 35px 30px 35px;
+            text-align: center;
+        }
+        h1 {
+            color: #2d3a4b;
+            margin-bottom: 10px;
+            font-size: 2.2rem;
+        }
+        p {
+            color: #4f8cff;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        .btn-primary {
+            padding: 14px 32px;
+            background: linear-gradient(90deg, #4f8cff 0%, #38b6ff 100%);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #38b6ff 0%, #4f8cff 100%);
+        }
+        .logo {
+            width: 80px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Optional: Add a logo image here -->
+        <!-- <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo"> -->
+        <h1>Student Exam Performance Indicator</h1>
+        <p>
+            Welcome! This tool predicts a student's math score based on their background and test preparation details.<br>
+            Click below to get started.
+        </p>
+        <a href="{{ url_for('predict_datapoint') }}" class="btn-primary">Predict Now</a>
+    </div>
+</body>
+</html>
